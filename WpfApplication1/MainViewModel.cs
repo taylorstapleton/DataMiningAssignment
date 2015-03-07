@@ -51,10 +51,10 @@ namespace WpfApplication1
 
             formClusters();
 
-            //problem1();
+            problem1();
             //problem2aa();
             //problem2ab();
-            problem2ad();
+            //problem2ad();
             //problem2b(2);
             //plot();
             
@@ -189,7 +189,7 @@ namespace WpfApplication1
                 }
 
                 maximums.Add(max);
-                means.Add(distances.Average());
+                means.Add(distances.Sum());
             }
 
             return means;
@@ -278,21 +278,21 @@ namespace WpfApplication1
                 centers.Clear();
 
                 problem2ac();
-                //meansList.Add(problem2ab());
-                meansList.Add(problem2b(3));
+                meansList.Add(problem2ab());
+                //meansList.Add(problem2b(3));
                 pointResults.Add(new List<List<Tuple<int, Point>>>(centerClusters));
                 centerClusters.Clear();
                 centers.Clear();
             }
 
-            int similarityCount = (from i in Enumerable.Range(0, testCount) from result in pointResultsGonzalez[i] where pointResults[i].Contains(result) select i).Count();
+            int similarityCount = (from i in Enumerable.Range(0, testCount) from result in pointResults[i] where result.Count == 1 select i).Count();
 
             LineSeries series = new LineSeries();
 
             foreach (var i in Enumerable.Range(1, testCount + 1))
             {
                 double threshhold = (double)i / (double)testCount;
-                var result = (from mean in meansList where ((mean.Sum() / meansList.OrderBy(x => x.Sum()).Last().Sum()) <= threshhold) select mean.Sum()).Count() / (double)testCount;
+                var result = (from mean in meansList where ((mean.Sum() / meansList.OrderBy(x => x.Sum()).Last().Sum()) <= threshhold) select mean).Count() / (double)testCount;
                 series.Points.Add(new DataPoint((double)i, result));
             }
 
